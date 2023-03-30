@@ -16,22 +16,22 @@ export class App extends Component {
     filter: '',
   };
   findContact(contact) {
-    return this.state.contacts.find(item => item.name === contact.name);
+    return this.state.contacts.find(
+      item => item.name.toLowerCase() === contact.name.toLowerCase()
+    );
   }
 
   addContact = contact => {
     if (this.findContact(contact)) {
       return alert(`${contact.name} is already in contacts.`);
     }
-    contact['id'] = nanoid();
+
     this.setState(prevState => ({
-      contacts: [...prevState.contacts, contact],
+      contacts: [...prevState.contacts, { ...contact, id: nanoid() }],
     }));
   };
-  handleChengeInput = str => {
-    this.setState(prevState => ({
-      filter: str,
-    }));
+  handleChengeInput = filter => {
+    this.setState({ filter });
   };
   applyFilters = () => {
     return this.state.contacts.filter(
@@ -54,17 +54,18 @@ export class App extends Component {
           <Bookcontact addContact={this.addContact} />
         </Section>
         <Section title="Contacts">
-          <FilterContacts
-            filter={filter}
-            onChangeInput={this.handleChengeInput}
-          />
-
-          {this.state.contacts.length !== 0 && (
-            <Contacts
-              contacts={this.applyFilters()}
-              onDeleteContact={this.handleDeleteContact}
-            />
-          )}
+          {this.state.contacts.length !== 0 ? (
+            <>
+              <FilterContacts
+                filter={filter}
+                onChangeInput={this.handleChengeInput}
+              />
+              <Contacts
+                contacts={this.applyFilters()}
+                onDeleteContact={this.handleDeleteContact}
+              />
+            </>
+          ):(<p>No contacts</p>)}
         </Section>
       </Container>
     );

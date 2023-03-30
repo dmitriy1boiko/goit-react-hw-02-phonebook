@@ -11,7 +11,7 @@ export class Bookcontact extends Component {
   };
   handleSubmit = e => {
     e.preventDefault();
-    this.props.addContact({ name: this.state.name, number: this.state.number });
+    this.props.addContact({...this.state});
 
     this.setState({ name: '', number: '' });
   };
